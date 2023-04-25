@@ -9,10 +9,7 @@ class UserManager(BaseUserManager):
 
     def _create_user(self, email, password, **extra_fields):
         email = self.normalize_email(email)
-
         user = self.model(email=email, **extra_fields)
-        # username = GlobalUserModel.normalize_username(username)
-        # user = self.model(username=username, email=email, **extra_fields)
         user.password = make_password(password)
         user.create_activation_code()
         user.save(using=self._db)
@@ -34,8 +31,6 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(email, password, **extra_fields)
-
-
 
 
 class CustomUser(AbstractUser):
