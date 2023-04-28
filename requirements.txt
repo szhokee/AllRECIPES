@@ -5,7 +5,7 @@ python-decouple
 pillow
 djangorestframework-simplejwt
 drf-yasg
-
+django-cors-headers
 dj-config-url 
 
 django-filter
