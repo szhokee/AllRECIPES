@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cuisine, Ingredient, Dish, DishIngredient
+from .models import Cuisine, Ingredient, Dish, DishIngredient, Favorite
 
 class CuisineSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,3 +23,10 @@ class DishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dish
         fields = '__all__'
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.email')
+    
+    class Meta:
+        model = Favorite
+        fields = '__all__' 

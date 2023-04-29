@@ -1,9 +1,11 @@
 from rest_framework import generics
+from rest_framework import mixins
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from .models import Cuisine, Ingredient, Dish
-from .serializers import CuisineSerializer, IngredientSerializer, DishSerializer
+from .models import Cuisine, Ingredient, Dish, Favorite
+from .serializers import CuisineSerializer, IngredientSerializer, DishSerializer, FavoriteSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import IsAuthenticated
 
 
 class CustomPagination(PageNumberPagination):
@@ -39,6 +41,22 @@ class DishModelViewSet(ModelViewSet):
     search_fields = ['name']
 
 
+class FavoriteModelViewSet(mixins.CreateModelMixin,
+                   mixins.RetrieveModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   GenericViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        return serializer.save(owner=self.request.user)
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(owner=self.request.user)
+        return queryset
 
 
 

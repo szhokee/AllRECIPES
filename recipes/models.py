@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Cuisine(models.Model):
     name = models.CharField(max_length=100)
@@ -48,3 +51,17 @@ class DishIngredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиенты для блюдо'
         verbose_name_plural = 'Ингредиенты для блюдо'
+
+
+class Favorite(models.Model):
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE, related_name='favorites'
+    )
+    event = models.ForeignKey(
+        Dish, 
+        on_delete=models.CASCADE, related_name='favorites'
+    )
+
+    def __str__(self):
+        return f'{self.owner} - {self.event.title}'

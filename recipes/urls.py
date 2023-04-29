@@ -11,4 +11,5 @@ urlpatterns = [
     path('cuisines/', include(router.urls)),
     path('ingredients/', include(router.urls)),
     path('dishes/', include(router.urls)),
+    path('favorites/', include(router.urls)),
 ]
