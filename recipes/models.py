@@ -58,7 +58,7 @@ class Favorite(models.Model):
         User,
         on_delete=models.CASCADE, related_name='favorites'
     )
-    event = models.ForeignKey(
+    dish = models.ForeignKey(
         Dish, 
         on_delete=models.CASCADE, related_name='favorites'
     )
