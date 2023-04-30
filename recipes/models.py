@@ -56,12 +56,38 @@ class DishIngredient(models.Model):
 class Favorite(models.Model):
     owner = models.ForeignKey(
         User,
-        on_delete=models.CASCADE, related_name='favorites'
+        on_delete=models.CASCADE, related_name='Сохраненное'
     )
     dish = models.ForeignKey(
         Dish, 
-        on_delete=models.CASCADE, related_name='favorites'
+        on_delete=models.CASCADE, related_name='Сохраненное'
     )
 
     def __str__(self):
-        return f'{self.owner} - {self.event.title}'
+        return f'{self.owner} - {self.dish.title}'
+
+    class Meta:
+        verbose_name = 'Сохраненное'
+        verbose_name_plural = 'Сохраненное'
+
+
+class Comment(models.Model):
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE, related_name='comments'
+    )
+    dish = models.ForeignKey(
+        Dish,
+        on_delete=models.CASCADE, related_name='comments'
+    )
+    comment = models.TextField()
+   
+    def __str__(self):
+        return f'{self.owner} - {self.dish}'
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+
+

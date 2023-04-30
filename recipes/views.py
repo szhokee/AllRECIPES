@@ -1,8 +1,8 @@
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from .models import Cuisine, Ingredient, Dish, Favorite
-from .serializers import CuisineSerializer, IngredientSerializer, DishSerializer, FavoriteSerializer
+from .models import Cuisine, Ingredient, Dish, Favorite, Comment
+from .serializers import CuisineSerializer, IngredientSerializer, DishSerializer, FavoriteSerializer, CommentSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
@@ -57,6 +57,17 @@ class FavoriteModelViewSet(mixins.CreateModelMixin,
         queryset = super().get_queryset()
         queryset = queryset.filter(owner=self.request.user)
         return queryset
+
+
+class CommentModelViewSet(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        return serializer.save(owner=self.request.user)
+
+
 
 
 
