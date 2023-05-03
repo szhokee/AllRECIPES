@@ -1,11 +1,11 @@
-from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from .models import Cuisine, Ingredient, Dish, Favorite, Comment
 from .serializers import CuisineSerializer, IngredientSerializer, DishSerializer, FavoriteSerializer, CommentSerializer
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
+from collections import defaultdict
 
 
 class CustomPagination(PageNumberPagination):
@@ -39,6 +39,31 @@ class DishModelViewSet(ModelViewSet):
     filter_backends = [SearchFilter]
     filterset_fields = ['name']
     search_fields = ['name']
+
+
+class GeneratorModelViewSet(ModelViewSet):
+  def findAllRecipes(self, recipes, ingredients, supplies):
+
+    graph = defaultdict(list)
+    in_degree = defaultdict(int)
+    for r,ing in zip(recipes,ingredients):
+      for i in ing:
+        graph[i].append(r)
+        in_degree[r]+=1
+
+    queue = supplies[::]
+    res = []
+    while queue:
+      ing = queue.pop(0)
+      if ing in recipes:
+        res.append(ing)
+
+      for child in graph[ing]:
+        in_degree[child]-=1
+        if in_degree[child]==0:
+          queue.append(child)
+
+    return res
 
 
 class FavoriteModelViewSet(mixins.CreateModelMixin,
