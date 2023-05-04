@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from collections import defaultdict
 
 User = get_user_model()
 
@@ -46,11 +47,22 @@ class DishIngredient(models.Model):
     quantity = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
-        return self.name
+        return f'{self.dish}'
 
     class Meta:
         verbose_name = 'Ингредиенты для блюдо'
         verbose_name_plural = 'Ингредиенты для блюдо'
+
+
+class Generator(models.Model):
+  generator = models.ManyToManyField(DishIngredient, related_name='Генератор')
+
+  def __str__(self):
+      return f'{self.generator}'
+  
+  class Meta:
+      verbose_name = 'Генератор Блюд'
+      verbose_name_plural = 'Генератор Блюд'
 
 
 class Favorite(models.Model):
